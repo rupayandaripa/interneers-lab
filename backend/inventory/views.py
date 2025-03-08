@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.middleware.csrf import get_token
+from django.core.paginator import Paginator
 
 # Create your views here.
 products = [
@@ -97,12 +98,23 @@ products = [
         "isAvailable": True,
     },
 ]
+paginator = Paginator(products , 2)
 
 def get_csrf_token(request):
     return JsonResponse({"csrfToken" : get_token(request)})
 
 def fetch_all_objects(request):
-    return JsonResponse(products , safe=False)
+    page = request.GET.get("page" , 1)
+    try:
+        paginated_products = paginator.page(page).object_list
+    except:
+        return JsonResponse({"error": "Invalid page number"} , status=400)
+    
+    return JsonResponse({
+        "products": paginated_products,
+        "total_pages": paginator.num_pages,
+        "current_page": page
+        } , safe=False)
 
 def fetch_product_by_name(request , product_name):
     
