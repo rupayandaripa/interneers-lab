@@ -11,11 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from mongoengine import connect
-
-#connect to MongoDB
-db = connect('Inventory' , host='localhost' , port=27017)
-print("Database connected successfully.........")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

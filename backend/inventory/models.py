@@ -5,6 +5,8 @@ import uuid
 from enum import Enum
 from datetime import datetime , timezone
 
+from mongoengine import connect
+
 
 class CATEGORY(Enum):
     ELECTRONICS = "Electronics"
@@ -15,7 +17,7 @@ class CATEGORY(Enum):
 
 class ProductQuerySet(QuerySet):
     
-    def get_all_products_from_mongodb(self , page_number):
+    def fetch_all_products_from_mongodb(self , page_number):
         offset = (page_number - 1) * NUMBER_OF_PRODUCTS__PER_PAGE
         return list(self.skip(offset).limit(NUMBER_OF_PRODUCTS__PER_PAGE))  # Returns all products as a list
     
@@ -26,7 +28,7 @@ class ProductQuerySet(QuerySet):
         return list(self.filter(brand=brand_name)) 
     
     def update_product_in_mongodb(self , product_id , data):
-        
+
         if not isinstance(data, dict):
             raise ValueError("Data must be a dictionary")
         
@@ -38,12 +40,63 @@ class ProductQuerySet(QuerySet):
     def delete_product_in_mongodb(self , product_id):
         return self.filter(product_id=product_id).delete()
     
+    def get_all_products_from_mongodb_belonging_to_a_category(self , category):
+        category_name = Category.objects(category=category).first()
+        return self.filter(category__in=[category_name])
     
+    def remove_a_product_from_a_category(self , product_id , category):
+        product = self.filter(product_id = product_id).first()
+        category_ref = Category.objects(category=category).first()
+        if category_ref in product.category:
+            product.category.remove(category_ref)
+            product.updated_at = datetime.now(timezone.utc)
+            product.save()
+            
+    def add_a_product_to_a_category(self , product_id , category):
+        product = self.filter(product_id = product_id).first()
+        category_ref = Category.objects(category = category).first()
+        
+        if category_ref not in product.category:
+            product.category.append(category_ref)
+            product.updated_at = datetime.now(timezone.utc)
+            product.save()
+            
+    def fetch_product_on_the_basis_of_multiple_filters(self , categories , min_price , max_price):
+        category_list = [cat.strip() for cat in categories.split(',')]
+        
+        category_references = list(Category.objects(category__in=category_list))
+                
+        
+        filters = {
+            "category__in": [cat_ref for cat_ref in category_references],
+            "price__gte": min_price,
+            "price__lte": max_price,
+            "isAvailable": True
+        }
+        
+        return list(self.filter(**filters))
+    
+
+class Category(Document):
+    category = EnumField(CATEGORY)
+
+    @classmethod
+    def seed_categories(self):
+        for enum_item in CATEGORY:
+            if not self.objects(category=enum_item.value).first():
+                self(category=enum_item.value).save()
+                print(f"Added category: {enum_item.value}")
+            else:
+                print(f"Category already exists: {enum_item.value}")
+
+
+    
+
 class ProductRepository(Document):
     product_id = StringField(default=lambda: str(uuid.uuid4()), unique=True, required=True)
     name = StringField(max_length=100, required=True)
     description = StringField()
-    category = EnumField(CATEGORY)
+    category = ListField(ReferenceField(Category))
     price = FloatField(required=True)
     brand = StringField(max_length=150)
     quantity = IntField()
@@ -72,3 +125,9 @@ class ProductRepository(Document):
         product.save()
         return product
     
+
+#connect to MongoDB
+db = connect('Inventory' , host='localhost' , port=27017)
+print("Database connected successfully.........")
+Category.seed_categories()
+print("Categories seeded")
