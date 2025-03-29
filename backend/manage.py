@@ -3,15 +3,22 @@
 import os
 import sys
 from datetime import datetime , timezone
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_app.settings")
-import django
-django.setup()
-
+from mongoengine import connect
 from inventory.models import ProductRepository , Category
+
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_app.settings")
+# import django
+# django.setup()
+
+
 
 def migrate_product_categories():
     print("Starting product category migration....")
+    
+    connect('Inventory' , host='localhost' , port=27017)
+    print("Database connected successfully.........")
+    Category.seed_categories()
+    print("Categories seeded")
     
     products = ProductRepository.objects()
     for product in products:
@@ -51,5 +58,7 @@ def main():
 
 
 if __name__ == "__main__":
-    migrate_product_categories() 
+    
+    if "runserver" not in sys.argv:
+        migrate_product_categories() 
     main()

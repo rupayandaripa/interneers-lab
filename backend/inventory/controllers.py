@@ -32,12 +32,10 @@ def serialize_product(product):
     return product_dict
 
 
-def all_products(request , page_number):
+def fetch_all_products(request , page_number):
     try:
         allProducts = ProductServices.fetch_all_products(page_number)
     except Exception as e:
-            import traceback
-            print("ERROR:", traceback.format_exc())
             return JsonResponse({"error": f"Error fetching product: {str(e)}"}, status=500)
     
     return JsonResponse({
@@ -47,18 +45,15 @@ def all_products(request , page_number):
             ]
         }, status=200)
     
-def product_by_id(request, product_id):
+def fetch_product_by_id(request, product_id):
     try:
-        products = ProductServices.get_product_by_id(product_id)
+        product = ProductServices.get_product_by_id(product_id)
 
-        if products is None:
+        if product is None:
             return JsonResponse({"error": "Product does not exist"}, status=404)
 
         return JsonResponse({
-            "product": [
-                {**product.to_mongo().to_dict(), "_id": str(product.id)}
-                for product in products
-            ]
+            "product": serialize_product(product)
         }, status=200)
 
     except Exception as e:
@@ -69,8 +64,6 @@ def product_by_brand(request , brand_name):
     try:
         allProducts = ProductServices.get_product_by_brand(brand_name)
     except Exception as e:
-            import traceback
-            print("ERROR:", traceback.format_exc())
             return JsonResponse({"error": f"Error fetching products of this brand: {str(e)}"}, status=500)
     
     return JsonResponse({
@@ -82,7 +75,7 @@ def product_by_brand(request , brand_name):
         }, status=200)
     
 
-def product_by_category(request, category):
+def fetch_product_by_category(request, category):
     try:
         products = CategoryServices.get_product_by_category(category)
 
@@ -110,11 +103,8 @@ def add_product(request):
             price = data.get("price")
             brand = data.get("brand")
             quantity = data.get("quantity")
-            isAvailable = data.get("isAvailable")
-            created_at = datetime.now(timezone.utc)
-            updated_at = datetime.now(timezone.utc)
             
-            if None in [name, description, category, price, brand, quantity, isAvailable]:
+            if None in [name, description, category, price, brand, quantity]:
                 return JsonResponse({"error": "Missing required fields"}, status=400)
             
             category_list = [cat.strip() for cat in category.split(',')]
@@ -129,8 +119,7 @@ def add_product(request):
                 }, status=400)
             
             price = float(price)
-            quantity = int(quantity)
-            isAvailable = isAvailable.lower() == "true"  
+            quantity = int(quantity) 
             
             category_references = []
             for cat_name in category_list:
@@ -143,7 +132,7 @@ def add_product(request):
                 return JsonResponse({"error": "No valid categories found"}, status=400)
             
             product = ProductServices.add_product(
-                name, description, category_references, price, brand, quantity, isAvailable , created_at , updated_at
+                name, description, category_references, price, brand, quantity
             )
             
             return JsonResponse({
@@ -178,15 +167,16 @@ def update_product(request, product_id):
             if "category" in data and data["category"] not in {e.value for e in CATEGORY}:
                 return JsonResponse({"error": f"Invalid category. Allowed values: {[e.value for e in CATEGORY]}"}, status=400)
             
+            if "product_id" in data or "created_at" in data or "updated_at" in data:
+                return JsonResponse({"error": "Forbidden fields cannit be updated"} , status = 400)
+            
             data["updated_at"] = datetime.now(timezone.utc)
 
             updated_count = ProductServices.update_product(product_id, data)
             
             if updated_count == 0:
                 return JsonResponse({"error": "Product not found or no changes made"}, status=404)
-
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+            
         except Exception as e:
             return JsonResponse({"error": f"Update failed: {str(e)}"}, status=400)
 
@@ -201,7 +191,6 @@ def delete_product(request , product_id):
     if request.method == "DELETE":
         try:
             return_data_after_deletion = ProductServices.delete_product(product_id)
-            print(type(return_data_after_deletion))
         except:
             return JsonResponse({"error": "Invalid product name"} , status = 404)
         
@@ -232,7 +221,7 @@ def add_product_to_a_category(request , product_id , category):
         
 
 
-def all_products_with_rich_filters(request):
+def fetch_all_products_using_rich_filters(request):
     if request.method == "GET":
         try:
             categories = request.GET.get("categories" , "")
@@ -240,8 +229,6 @@ def all_products_with_rich_filters(request):
             max_price = request.GET.get("max_price")
             allProducts = CategoryServices.fetch_products_using_rich_filters(categories , min_price , max_price)
         except Exception as e:
-                import traceback
-                print("ERROR:", traceback.format_exc())
                 return JsonResponse({"error": f"Error fetching product: {str(e)}"}, status=500)
         
         product_list = [serialize_product(product) for product in allProducts]

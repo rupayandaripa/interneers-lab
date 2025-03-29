@@ -17,30 +17,27 @@ class CATEGORY(Enum):
 
 class ProductQuerySet(QuerySet):
     
-    def fetch_all_products_from_mongodb(self , page_number):
+    def fetch_all_products(self , page_number):
         offset = (page_number - 1) * NUMBER_OF_PRODUCTS__PER_PAGE
         return list(self.skip(offset).limit(NUMBER_OF_PRODUCTS__PER_PAGE))  # Returns all products as a list
     
-    def get_product_by_id_from_mongodb(self, product_id):
-        return self.filter(product_id=product_id)
+    def get_product_by_id(self, product_id):
+        return self.filter(product_id=product_id).first()
 
-    def get_product_by_brand_from_mongodb(self, brand_name):
+    def get_product_by_brand(self, brand_name):
         return list(self.filter(brand=brand_name)) 
     
-    def update_product_in_mongodb(self , product_id , data):
+    def update_product(self , product_id , data):
 
         if not isinstance(data, dict):
             raise ValueError("Data must be a dictionary")
-        
-        print(type(data))
         update_data = {f"set__{k}": v for k, v in data.items()} 
-        print(f"Converted update data: {update_data}")
-        return self.filter(product_id=product_id).update(**update_data)
+        return self.filter(product_id=product_id).first().update(**update_data)
     
-    def delete_product_in_mongodb(self , product_id):
+    def delete_product(self , product_id):
         return self.filter(product_id=product_id).delete()
     
-    def get_all_products_from_mongodb_belonging_to_a_category(self , category):
+    def get_all_products_belonging_to_a_category(self , category):
         category_name = Category.objects(category=category).first()
         return self.filter(category__in=[category_name])
     
@@ -68,7 +65,7 @@ class ProductQuerySet(QuerySet):
                 
         
         filters = {
-            "category__in": [cat_ref for cat_ref in category_references],
+            "category__in": category_references,
             "price__gte": min_price,
             "price__lte": max_price,
             "isAvailable": True
@@ -110,7 +107,7 @@ class ProductRepository(Document):
         return queryset 
 
     @classmethod
-    def add_product_in_mongodb(cls, name, description, category, price, brand, quantity, isAvailable , created_at , updated_at):
+    def add_product(cls, name, description, category, price, brand, quantity):
         product = cls(
             name=name,
             description=description,
@@ -118,16 +115,9 @@ class ProductRepository(Document):
             price=price,
             brand=brand,
             quantity=quantity,
-            isAvailable=isAvailable,
-            created_at=created_at,
-            updated_at=updated_at
+            created_at = datetime.now(timezone.utc),
+            updated_at = datetime.now(timezone.utc),
+            isAvailable = True if quantity > 0 else False
         )
         product.save()
         return product
-    
-
-#connect to MongoDB
-db = connect('Inventory' , host='localhost' , port=27017)
-print("Database connected successfully.........")
-Category.seed_categories()
-print("Categories seeded")

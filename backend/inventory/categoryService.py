@@ -3,7 +3,7 @@ from .models import ProductRepository
 class CategoryServices:
     @staticmethod
     def get_product_by_category(category):
-        return ProductRepository.objects.get_all_products_from_mongodb_belonging_to_a_category(category)
+        return ProductRepository.objects.get_all_products_from_belonging_to_a_category(category)
     
     @staticmethod
     def remove_product_from_a_category(product_id , category):
