@@ -4,6 +4,7 @@ from inventory.productService import ProductServices
 from mongoengine import connect , disconnect
 import mongomock
 from inventory.models import Category
+from parameterized import parameterized
 
 class TestProductServices(unittest.TestCase):
     
@@ -16,17 +17,23 @@ class TestProductServices(unittest.TestCase):
     def tearDownClass(cls):
         disconnect()
     
-    @patch('inventory.productService.ProductRepository')
-    def test_get_product_by_id(self , mock_repository):
-        mock_product = MagicMock()
-        mock_product.to_mongo.return_value = {'product_id': '123' , 'name': 'Test Product' , 'price': 100}
-        mock_repository.objects.get_product_by_id.return_value = mock_product
+    @parameterized.expand([
+        ("test_1" , "123" , "Test Product 1" , 100),
+        ("test_2" , "456" , "Test Product 2" , 200),
+        ("test_3" , "789" , "Test Product 3" , 300),
+    ])
+    def test_get_product_by_id(self , name , product_id , price , mock_repository):
         
-        product = ProductServices.get_product_by_id('123')
+        with patch('inventory.productService.ProductRepository') as mock_repository:
+            mock_product = MagicMock()
+            mock_product.to_mongo.return_value = {'product_id': product_id , 'name': name , 'price': price}
+            mock_repository.objects.get_product_by_id.return_value = mock_product
         
-        self.assertIsNotNone(product)
-        self.assertEqual(product.to_mongo() , {'product_id': '123', 'name': 'Test Product', 'price': 100})
-        mock_repository.objects.get_product_by_id.assert_called_once_with(product_id='123')
+            product = ProductServices.get_product_by_id(product_id)
+        
+            self.assertIsNotNone(product)
+            self.assertEqual(product.to_mongo() , {'product_id': product_id, 'name': name, 'price': price})
+            mock_repository.objects.get_product_by_id.assert_called_once_with(product_id=product_id)
         
         
     @patch('inventory.productService.ProductRepository')
