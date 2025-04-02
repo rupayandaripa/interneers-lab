@@ -91,7 +91,8 @@ def fetch_product_by_category(request, category):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
+
+@csrf_exempt   
 def add_product(request):
     if request.method == "POST":
         try:
@@ -236,8 +237,3 @@ def fetch_all_products_using_rich_filters(request):
         return JsonResponse({
             "product": product_list
         }, status=200)
-        
-    
-    
-
-    
