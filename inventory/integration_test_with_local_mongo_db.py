@@ -30,7 +30,7 @@ def seed_products():
         ).save()
 
         ProductRepository(
-            product_id='102',
+            product_id='104',
             name='Chair',
             description='Comfortable office chair',
             category=[fashion_category],
@@ -50,7 +50,7 @@ class IntegrationTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        connect('test_db', host='mongodb://localhost:27017/Inventory')
+        connect('test_db' , host='localhost' , port=27017)
         seed_products()
         
 
