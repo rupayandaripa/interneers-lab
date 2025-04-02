@@ -1,4 +1,4 @@
-# Intern Bootcamp 2025
+# Interneers Lab
 
 Welcome to the **Interneers Lab 2025** repository! This serves as a minimal starter kit for learning and experimenting with:
 - **Django** (Python)
@@ -51,11 +51,11 @@ Welcome to the **Interneers Lab 2025** repository! This serves as a minimal star
 
    Forking a repository on GitHub creates your own copy under your GitHub account, where you can make changes independently without affecting the original repo. Later, you can make pull requests to merge changes back if needed.
 
-4. Fork the Rippling/intern-bootcamp-2025 repository (ensure you’re in the correct org or your personal GitHub account, as directed).
+4. Fork the Rippling/interneers-lab repository (ensure you’re in the correct org or your personal GitHub account, as directed).
 5. **Clone** your forked repo:
     ```
-    git clone git@github.com:<YourUsername>/intern-bootcamp-2025.git
-    cd intern-bootcamp-2025
+    git clone git@github.com:<YourUsername>/interneers-lab.git
+    cd interneers-lab
     ```
 
 ## Prerequisites & Tooling
@@ -75,7 +75,7 @@ These are the essential tools you need:
 2. **Python 3.13** (if you need Python scripts or a backend environment)
    - **Why 3.13?**
 
-      This is the recommended version for the intern bootcamp’s Python-related tasks, ensuring consistency across projects.
+      This is the recommended version for the module’s Python-related tasks, ensuring consistency across projects.
    - **Install or Upgrade**:  
      
      - macOS (with Homebrew): `brew install python`  
@@ -87,7 +87,7 @@ These are the essential tools you need:
      ```
      You should see something like `Python 3.13.x`.
 
-   If you are getting something else , please update `/.bashrc` or `/.zshrc` to have alias with following
+   If you are getting something else , please update `.bashrc` or `.zshrc` to have alias with following
    ```
    vim ~/.zshrc   # or any preferred editor of your choice
    alias python3 = "/opt/homebrew/bin/python3.13"
@@ -173,12 +173,18 @@ These are the essential tools you need:
 
 ### Create a Python Virtual Environment
 
-The python virtual env should be created inside the /bootcamp_backend directory. Run the following commands inside the `bootcamp_backend` directory. 
+The python virtual env should be created inside the backend directory. Run the following commands inside the `backend` directory to create virtual environment.
 ```bash
-cd bootcamp_backend
-python3 -m venv venv
-source venv/bin/activate   # macOS/Linux or, 
-# on Windows:
+cd backend
+python3.13 -m venv venv
+```
+To activate the virtual environment, run the following command:
+```bash
+# macOS/Linux
+source venv/bin/activate
+```
+```Powershell
+# on Windows Powershell:
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\venv\Scripts\activate
 ```
@@ -186,7 +192,6 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ### Install Python Dependencies
 
 ```bash
-cd backend
 pip3 install -r requirements.txt
 ```
 
@@ -204,10 +209,10 @@ Make sure `venv/` and other temporary files aren’t committed.
 
 ### Backend: Django
 
-If your Django project is in `bootcamp_backend/`, navigate there:
+If your Django project is in `backend`, navigate there:
 
 ```bash
-cd bootcamp_backend
+cd backend
 ```
 
 Start the Django server on a port less likely to conflict (e.g., `8001`):
@@ -297,7 +302,7 @@ This section explains how to create a Django endpoint that reads a `name` parame
 Open your Django project’s `urls.py` (or `views.py`, depending on your structure). Below, we’ll define a function that looks for a `name` query parameter in `request.GET`:
 
 ```python
-# bootcamp_backend/urls.py
+# django_app/urls.py
 
 from django.contrib import admin
 from django.urls import path
@@ -332,10 +337,10 @@ source venv/bin/activate         # macOS/Linux
 
 Install dependencies (if you haven't):
 ```bash
-cd bootcamp_backend  # if you are not inside bootcamp_backend already.
+cd backend  # if you are not inside  /backend already.
 pip3 install -r requirements.txt
 ```
-Navigate to your Django project folder (e.g., cd bootcamp_backend) and run the server on port 8001:
+Navigate to your Django project folder (e.g., cd backend) and run the server on port 8001:
 ```
 python manage.py runserver 8001
 ```
@@ -385,7 +390,7 @@ Send the request. You should see a JSON response:
 ### Django Tests
 
 ```
-cd bootcamp_backend
+cd backend
 python manage.py test
 ```
 

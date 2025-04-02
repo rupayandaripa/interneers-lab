@@ -1,3 +1,7 @@
 Django==5.1.6
+<<<<<<< HEAD
 pymongo==4.11.1
 
+=======
+pymongo==4.11.1
+>>>>>>> origin/main
