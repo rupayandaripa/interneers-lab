@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
@@ -5,9 +6,9 @@ from datetime import datetime , timezone
 from mongoengine import connect
 from inventory.models import ProductRepository , Category
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_app.settings")
-import django
-django.setup()
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_app.settings")
+# import django
+# django.setup()
 
 
 
@@ -57,5 +58,7 @@ def main():
 
 
 if __name__ == "__main__":
-    migrate_product_categories() 
+    
+    if "runserver" not in sys.argv:
+        migrate_product_categories() 
     main()
