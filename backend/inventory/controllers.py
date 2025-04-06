@@ -40,8 +40,7 @@ def fetch_all_products(request , page_number):
     
     return JsonResponse({
             "products": [
-                {**product.to_mongo().to_dict(), "_id": str(product.id)}
-                for product in allProducts
+                serialize_product(product) for product in allProducts
             ]
         }, status=200)
     
