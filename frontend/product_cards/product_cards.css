@@ -11,6 +11,16 @@ h1 {
     color: #333
 }
 
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+}
+   
+
 .product-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -18,6 +28,7 @@ h1 {
     justify-content: center;
     max-width: 1200px;
     margin: auto;
+    animation: fadeIn 4s ease-in forwards;
 }
 
 .product-tile {
