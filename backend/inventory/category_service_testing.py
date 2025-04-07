@@ -27,12 +27,10 @@ class TestProductCategoryServices(unittest.TestCase):
         
         products = CategoryServices.get_product_by_category('Electronics')
         
-        print("Products" , products)
-        
         self.assertEqual(len(products), 2)
 
-        self.assertEqual(products[0].to_mongo(), {'product_id': '123', 'name': 'Test Product', 'price': 100, 'category': ['Electronics']})
-        self.assertEqual(products[1].to_mongo(), {'product_id': '124', 'name': 'Test Product 2', 'price': 200, 'category': ['Electronics']})
+        self.assertEqual(products[0].to_mongo(), mock_product1.to_mongo.return_value)
+        self.assertEqual(products[1].to_mongo(), mock_product2.to_mongo.return_value)
         
         mock_repository.objects.get_all_products_from_belonging_to_a_category.assert_called_once_with('Electronics')
         
