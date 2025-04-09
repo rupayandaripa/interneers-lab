@@ -10,12 +10,6 @@ async function fetchProductData() {
 
         const data = await response.json()
 
-        // document.querySelector(".product-name").textContent = data['product']['name']
-        // document.querySelector('.product-description').textContent = data['product']['description']
-        // document.querySelector('.product-price').textContent = `$ ${data['product']['price']}`
-        // document.querySelector('.product-category').textContent = data['product']['category']
-        // document.querySelector('.product-brand').textContent = data['product']['brand']
-
         const productList = document.getElementById('product-list')
         productList.innerHTML = ""
 
