@@ -1,0 +1,21 @@
+// HomePage.tsx
+import React from 'react';
+import Sidebar from './Sidebar';
+import ProductList from './ProductList';
+import './HomePage.css';
+
+const HomePage: React.FC = () => {
+  return (
+    <div className="home-layout">
+      <aside className="sidebar">
+        <Sidebar />
+      </aside>
+      <main className="product-list">
+        <ProductList />
+      </main>
+    </div>
+  );
+};
+
+export default HomePage;
+

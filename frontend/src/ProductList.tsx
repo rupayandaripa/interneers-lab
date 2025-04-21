@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
 import { Product } from 'Product';
+import Spinner from 'Spinner';
 
 // const dummyProducts: Product[] = [
 //   {
@@ -67,11 +68,11 @@ const ProductList: React.FC = () => {
     fetchProducts()
   } , [])
 
-  if(loading) return <p>Loading Products....</p>
+  if(loading) return <Spinner />
   return (
     <div className="product-list">
       {products.map(product => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.product_id} product={product} />
       ))}
     </div>
   );
