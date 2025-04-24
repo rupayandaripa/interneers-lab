@@ -1,7 +1,7 @@
 // HomePage.tsx
 import React from 'react';
 import Sidebar from './component/sidebar/Sidebar';
-import ProductList from './ProductList';
+import ProductList from 'container/ProductList';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {

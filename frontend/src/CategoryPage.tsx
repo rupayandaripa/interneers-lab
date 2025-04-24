@@ -1,9 +1,9 @@
 import React, { useEffect , useState} from 'react';
 import { useParams } from 'react-router-dom';
-import ProductList from './ProductList';
+import ProductList from './container/ProductList';
 import Sidebar from 'component/sidebar/Sidebar';
-import { Product } from 'Product';
-import ProductCard from 'ProductCard';
+import { Product } from 'Product.types';
+import ProductCard from 'component/productCard/ProductCard';
 import Spinner from 'component/spinner/Spinner';
 
 
