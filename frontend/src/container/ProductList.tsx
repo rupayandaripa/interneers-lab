@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../component/productCard/ProductCard';
 import { Product } from 'Product.types';
-
+import Spinner from 'component/spinner/Spinner';
 
 const url = 'http://127.0.0.1:8000/products/1/'
 
@@ -41,11 +41,11 @@ const ProductList: React.FC = () => {
     fetchProducts()
   } , [])
 
-  if(loading) return <p>Loading Products....</p>
+  if(loading) return <Spinner />
   return (
     <div className="product-list">
       {products.map(product => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.product_id} product={product} />
       ))}
     </div>
   );
