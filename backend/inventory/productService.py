@@ -9,7 +9,7 @@ class ProductServices:
     
     @staticmethod
     def get_product_by_id(product_id):
-        return ProductRepository.objects.get_product_by_id(product_id)
+        return ProductRepository.objects.get_product_by_id(product_id=product_id)
     
     @staticmethod
     def get_product_by_brand(brand_name):
@@ -17,7 +17,14 @@ class ProductServices:
     
     @staticmethod
     def add_product(name, description, category, price, brand, quantity):
-        return ProductRepository.add_product(name, description, category, price, brand, quantity)
+        return ProductRepository.add_product(
+            name=name, 
+            description=description, 
+            category=category, 
+            price=price, 
+            brand=brand, 
+            quantity=quantity
+        )
     
     @staticmethod
     def update_product(product_id, data):
@@ -27,4 +34,3 @@ class ProductServices:
     def delete_product(product_id):
         return ProductRepository.objects.delete_product(product_id)
         
-    

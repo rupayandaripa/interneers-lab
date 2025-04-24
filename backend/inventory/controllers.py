@@ -235,8 +235,4 @@ def fetch_all_products_using_rich_filters(request):
         return JsonResponse({
             "product": product_list
         }, status=200)
-        
-    
-    
 
-    
