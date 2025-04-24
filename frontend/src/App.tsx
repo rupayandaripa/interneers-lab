@@ -1,7 +1,7 @@
 import React from 'react';
-import ProductList from './ProductList';
+import ProductList from './container/ProductList';
 import './App.css';
-import Header from 'Header';
+import Header from 'component/header/Header';
 
 const App: React.FC = () => {
   return (
