@@ -1,10 +1,10 @@
 import React, { useEffect , useState} from 'react';
 import { useParams } from 'react-router-dom';
 import ProductList from './ProductList';
-import Sidebar from 'Sidebar';
+import Sidebar from 'component/sidebar/Sidebar';
 import { Product } from 'Product';
 import ProductCard from 'ProductCard';
-import Spinner from 'Spinner';
+import Spinner from 'component/spinner/Spinner';
 
 
 const CategoryPage: React.FC = () => {

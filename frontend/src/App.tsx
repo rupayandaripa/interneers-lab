@@ -1,9 +1,9 @@
 import React from 'react';
-import ProductList from './ProductList';
+import ProductList from './container/ProductList';
 import './App.css';
-import Header from 'Header';
-import { BrowserRouter as Router , Routes , Route } from 'react-router-dom';
+import Header from 'component/header/Header';
 import HomePage from 'HomePage';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import CategoryPage from 'CategoryPage';
 
 const App: React.FC = () => {

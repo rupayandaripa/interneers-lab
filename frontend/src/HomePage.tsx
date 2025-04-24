@@ -1,6 +1,6 @@
 // HomePage.tsx
 import React from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from './component/sidebar/Sidebar';
 import ProductList from './ProductList';
 import './HomePage.css';
 

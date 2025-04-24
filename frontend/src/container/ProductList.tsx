@@ -1,34 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import ProductCard from './ProductCard';
-import { Product } from 'Product';
-import Spinner from 'Spinner';
-
-// const dummyProducts: Product[] = [
-//   {
-//     id: 1,
-//     name: 'Wireless Headphones',
-//     price: 59.99,
-//     description: 'High-quality sound with noise cancellation.',
-//     category: 'Electronics',
-//     brand: 'Boat'
-//   },
-//   {
-//     id: 2,
-//     name: 'Smart Watch',
-//     price: 89.99,
-//     description: 'Track your fitness and notifications on the go.',
-//     category: 'Electronics',
-//     brand: 'Realme'
-//   },
-//   {
-//     id: 3,
-//     name: 'Bluetooth Speaker',
-//     price: 39.99,
-//     description: 'Compact size, powerful sound.',
-//     category: 'Electronics',
-//     brand: 'Bose'
-//   },
-// ];
+import ProductCard from '../component/productCard/ProductCard';
+import { Product } from 'Product.types';
+import Spinner from 'component/spinner/Spinner';
 
 const url = 'http://127.0.0.1:8000/products/1/'
 
